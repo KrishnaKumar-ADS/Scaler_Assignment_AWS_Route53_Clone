@@ -39,7 +39,13 @@ export default function AIChatPage() {
     setIsLoading(true);
 
     try {
-      const res = await api.post("/chat", { prompt: userMsg });
+      const payload = { 
+        messages: [
+          ...messages.filter(m => m.role !== 'assistant' || !m.content.startsWith('Error:')),
+          { role: "user", content: userMsg }
+        ]
+      };
+      const res = await api.post("/chat", payload);
       setMessages(prev => [...prev, { role: "assistant", content: res.data.response }]);
     } catch (error: any) {
       console.error("Chat error:", error);
