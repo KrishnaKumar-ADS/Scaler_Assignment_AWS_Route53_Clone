@@ -196,14 +196,12 @@ export default function DashboardPage() {
             </div>
             
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger 
-                render={
-                  <Button className="bg-blue-600 hover:bg-blue-500 text-foreground">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create Hosted Zone
-                  </Button>
-                }
-              />
+              <DialogTrigger render={
+                <Button className="bg-indigo-600 hover:bg-indigo-500 text-foreground">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Zone
+                </Button>
+              } />
               <DialogContent className="sm:max-w-md bg-background border-border text-zinc-200">
                 <DialogHeader>
                   <DialogTitle className="text-foreground">Create Hosted Zone</DialogTitle>
