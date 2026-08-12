@@ -12,11 +12,11 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { LogOut, Plus, Trash2, Globe, Server, Activity, ArrowRight, ClipboardList } from "lucide-react";
 
 interface DashboardStats {
-  total_hosted_zones: int;
-  total_dns_records: int;
-  public_zones: int;
-  private_zones: int;
-  recent_activity_count: int;
+  total_hosted_zones: number;
+  total_dns_records: number;
+  public_zones: number;
+  private_zones: number;
+  recent_activity_count: number;
 }
 
 interface HostedZone {
@@ -154,12 +154,14 @@ export default function DashboardPage() {
             <h2 className="text-xl font-semibold text-white">Your Hosted Zones</h2>
             
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-blue-600 hover:bg-blue-500 text-white">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create Hosted Zone
-                </Button>
-              </DialogTrigger>
+              <DialogTrigger 
+                render={
+                  <Button className="bg-blue-600 hover:bg-blue-500 text-white">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create Hosted Zone
+                  </Button>
+                }
+              />
               <DialogContent className="sm:max-w-md bg-zinc-950 border-zinc-800 text-zinc-200">
                 <DialogHeader>
                   <DialogTitle className="text-white">Create Hosted Zone</DialogTitle>

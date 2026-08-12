@@ -117,12 +117,14 @@ export default function ZoneDetailsPage() {
           </div>
           
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-indigo-600 hover:bg-indigo-500 text-white">
-                <Plus className="h-4 w-4 mr-2" />
-                Create Record
-              </Button>
-            </DialogTrigger>
+            <DialogTrigger 
+              render={
+                <Button className="bg-indigo-600 hover:bg-indigo-500 text-white">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Record
+                </Button>
+              }
+            />
             <DialogContent className="sm:max-w-md bg-zinc-950 border-zinc-800 text-zinc-200">
               <DialogHeader>
                 <DialogTitle className="text-white">Create DNS Record</DialogTitle>
