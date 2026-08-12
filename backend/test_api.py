@@ -34,3 +34,24 @@ if response.status_code == 200:
             print("[ERROR] Get DNS Records failed:", response.text)
 else:
     print("[ERROR] Get Hosted Zones failed:", response.text)
+
+print("\n--- Testing Phase 6: Analytics ---")
+response = requests.get(f"{API_URL}/api/analytics/dashboard-stats", headers={"Authorization": f"Bearer {token}"})
+if response.status_code == 200:
+    stats = response.json()
+    print("[OK] Get Dashboard Stats successful")
+    print(f"  - Total Zones: {stats['total_hosted_zones']} (Public: {stats['public_zones']}, Private: {stats['private_zones']})")
+    print(f"  - Total DNS Records: {stats['total_dns_records']}")
+    print(f"  - Recent Activity: {stats['recent_activity_count']} events")
+else:
+    print("[ERROR] Get Dashboard Stats failed:", response.text)
+
+response = requests.get(f"{API_URL}/api/analytics/audit-logs?limit=3", headers={"Authorization": f"Bearer {token}"})
+if response.status_code == 200:
+    logs = response.json().get("items", [])
+    print(f"[OK] Get Audit Logs successful, retrieved {len(logs)} most recent logs:")
+    for log in logs:
+        print(f"  - {log['action']} on {log['resource_type']} ({log['created_at']})")
+else:
+    print("[ERROR] Get Audit Logs failed:", response.text)
+
