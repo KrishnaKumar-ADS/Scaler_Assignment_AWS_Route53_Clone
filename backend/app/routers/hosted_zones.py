@@ -5,6 +5,7 @@ from app.database.connection import get_db
 from app.dependencies.auth import get_current_user
 from app.models.user import User
 from app.schemas.hosted_zone import HostedZoneCreate, HostedZoneUpdate, HostedZoneResponse, PaginatedHostedZones
+from app.schemas.bulk import BulkDeleteRequest
 from app.services import hosted_zones
 
 router = APIRouter(prefix="/api/hosted-zones", tags=["hosted-zones"])
@@ -63,3 +64,18 @@ def delete_zone(
     current_user: User = Depends(get_current_user)
 ):
     return hosted_zones.delete_hosted_zone(db, current_user.id, zone_id)
+
+@router.post("/bulk-delete")
+def bulk_delete_zones(
+    request: BulkDeleteRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    deleted_count = 0
+    for zid in request.ids:
+        try:
+            hosted_zones.delete_hosted_zone(db, current_user.id, zid)
+            deleted_count += 1
+        except Exception:
+            pass # Ignore if not found or unauthorized
+    return {"message": f"Successfully deleted {deleted_count} zones"}

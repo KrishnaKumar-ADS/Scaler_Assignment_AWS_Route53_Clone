@@ -31,21 +31,21 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none opacity-20">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-600 blur-[120px]" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-600 blur-[120px]" />
       </div>
 
-      <Card className="w-full max-w-md z-10 border-zinc-800 bg-zinc-900/80 backdrop-blur-xl shadow-2xl">
+      <Card className="w-full max-w-md z-10 border-border bg-card backdrop-blur-xl shadow-2xl">
         <CardHeader className="space-y-2 text-center pb-8 pt-8">
           <div className="flex justify-center mb-2">
             <div className="p-3 bg-blue-500/10 rounded-2xl ring-1 ring-blue-500/20">
               <Globe className="h-8 w-8 text-blue-500" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold tracking-tight text-white">Route53 Console</CardTitle>
+          <CardTitle className="text-2xl font-bold tracking-tight text-foreground">Route53 Console</CardTitle>
           <CardDescription className="text-zinc-400">
             Sign in to manage your hosted zones and DNS records
           </CardDescription>
@@ -66,7 +66,7 @@ export default function LoginPage() {
                 <Input
                   type="email"
                   placeholder="name@example.com"
-                  className="pl-9 bg-zinc-950/50 border-zinc-800 focus-visible:ring-blue-500 text-zinc-200"
+                  className="pl-9 bg-background/50 border-border focus-visible:ring-blue-500 text-zinc-200"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -80,7 +80,7 @@ export default function LoginPage() {
                 <Input
                   type="password"
                   placeholder="Password"
-                  className="pl-9 bg-zinc-950/50 border-zinc-800 focus-visible:ring-blue-500 text-zinc-200"
+                  className="pl-9 bg-background/50 border-border focus-visible:ring-blue-500 text-zinc-200"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -92,7 +92,7 @@ export default function LoginPage() {
           <CardFooter className="flex flex-col space-y-4 pb-8">
             <Button 
               type="submit" 
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium"
+              className="w-full bg-blue-600 hover:bg-blue-500 text-foreground font-medium"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
