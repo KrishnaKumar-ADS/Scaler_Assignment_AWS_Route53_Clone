@@ -1,22 +1,25 @@
-from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, Response
+from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, Response, Query
 from sqlalchemy.orm import Session
 
 from app.database.connection import get_db
 from app.dependencies.auth import get_current_user
 from app.models.user import User
-from app.schemas.dns_record import DNSRecordCreate, DNSRecordUpdate, DNSRecordResponse
+from app.schemas.dns_record import DNSRecordCreate, DNSRecordUpdate, DNSRecordResponse, PaginatedDNSRecords
 from app.schemas.bulk import BulkDeleteRequest
 from app.services import dns_records, dns_parser, hosted_zones
 
 router = APIRouter(prefix="/api/hosted-zones", tags=["dns-records"])
 
-@router.get("/{zone_id}/records", response_model=list[DNSRecordResponse])
-def list_dns_records(
+@router.get("/{zone_id}/records", response_model=PaginatedDNSRecords)
+def list_records(
     zone_id: int,
+    search: str = Query(None),
+    page: int = Query(1, ge=1),
+    limit: int = Query(50, ge=1, le=100),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    return dns_records.get_dns_records(db, current_user.id, zone_id)
+    return dns_records.get_dns_records(db, current_user.id, zone_id, search, page, limit)
 
 @router.post("/{zone_id}/records", response_model=DNSRecordResponse)
 def create_record(
@@ -107,7 +110,8 @@ def export_zone(
     current_user: User = Depends(get_current_user)
 ):
     zone = hosted_zones.get_hosted_zone(db, current_user.id, zone_id)
-    records = dns_records.get_dns_records(db, current_user.id, zone_id)
+    records_res = dns_records.get_dns_records(db, current_user.id, zone_id, limit=1000)
+    records = records_res["items"]
     
     if format == "bind":
         bind_str = dns_parser.export_to_bind(zone.name, [{"name": r.name, "record_type": r.record_type, "value": r.value, "ttl": r.ttl} for r in records])
@@ -115,6 +119,6 @@ def export_zone(
         
     # JSON format
     return {
-        "zone": {"name": zone.name, "type": zone.type, "status": zone.status},
+        "zone": {"name": zone.name, "type": zone.zone_type, "status": zone.status},
         "records": [{"name": r.name, "record_type": r.record_type, "value": r.value, "ttl": r.ttl} for r in records]
     }

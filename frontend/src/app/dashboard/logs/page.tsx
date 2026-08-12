@@ -11,11 +11,14 @@ import { ArrowLeft, ClipboardList, Activity } from "lucide-react";
 
 interface AuditLog {
   id: number;
-  user_email: string;
+  user_email?: string;
   action: string;
-  entity_type: string;
-  entity_name: string;
-  timestamp: string;
+  entity_type?: string;
+  resource_type?: string;
+  entity_name?: string;
+  description?: string;
+  timestamp?: string;
+  created_at?: string;
 }
 
 export default function AuditLogsPage() {
@@ -50,18 +53,16 @@ export default function AuditLogsPage() {
     return "bg-zinc-800 text-zinc-300 border-zinc-700";
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString?: string) => {
     if (!dateString) return "N/A";
     
-    // Attempt to fix common Python ISO string issues by appending Z if missing timezone
     let safeDateStr = dateString;
     if (!safeDateStr.includes('Z') && !safeDateStr.match(/[+-]\d\d:\d\d$/)) {
-        safeDateStr += 'Z'; // Assume UTC if no timezone is provided by SQLite
+        safeDateStr += 'Z';
     }
     
     const date = new Date(safeDateStr);
     
-    // Check for invalid date
     if (isNaN(date.getTime())) return dateString; 
 
     return new Intl.DateTimeFormat('en-US', { 
@@ -119,21 +120,28 @@ export default function AuditLogsPage() {
                   </TableCell>
                 </TableRow>
               ) : (
-                logs.map((log) => (
-                  <TableRow key={log.id} className="border-border hover:bg-zinc-800/50 transition-colors">
-                    <TableCell className="text-muted-foreground text-sm whitespace-nowrap">
-                      {formatDate(log.timestamp)}
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={getActionColor(log.action)}>
-                        {log.action}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-zinc-300 font-medium">{log.entity_type}</TableCell>
-                    <TableCell className="text-muted-foreground">{log.entity_name}</TableCell>
-                    <TableCell className="text-muted-foreground text-sm">{log.user_email}</TableCell>
-                  </TableRow>
-                ))
+                logs.map((log) => {
+                  const logTimestamp = log.timestamp || log.created_at;
+                  const logEntity = log.entity_type || log.resource_type || "HOSTED_ZONE";
+                  const logEntityName = log.entity_name || log.description || "N/A";
+                  const logUser = log.user_email || user.email;
+
+                  return (
+                    <TableRow key={log.id} className="border-border hover:bg-zinc-800/50 transition-colors">
+                      <TableCell className="text-muted-foreground text-sm whitespace-nowrap">
+                        {formatDate(logTimestamp)}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className={getActionColor(log.action)}>
+                          {log.action}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-zinc-300 font-medium">{logEntity}</TableCell>
+                      <TableCell className="text-muted-foreground">{logEntityName}</TableCell>
+                      <TableCell className="text-muted-foreground text-sm">{logUser}</TableCell>
+                    </TableRow>
+                  );
+                })
               )}
             </TableBody>
           </Table>

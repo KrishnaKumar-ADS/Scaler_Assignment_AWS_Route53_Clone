@@ -2,13 +2,30 @@ from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 
 from app.models.audit_log import AuditLog
+from app.models.user import User
 from app.models.hosted_zone import HostedZone
-from app.models.dns_record import DNSRecord
 
 def get_audit_logs(db: Session, user_id: int, page: int = 1, limit: int = 50):
-    query = db.query(AuditLog).filter(AuditLog.user_id == user_id)
+    query = db.query(AuditLog, User).join(User, AuditLog.user_id == User.id).filter(AuditLog.user_id == user_id)
     total = query.count()
-    items = query.order_by(AuditLog.created_at.desc()).offset((page - 1) * limit).limit(limit).all()
+    results = query.order_by(AuditLog.created_at.desc()).offset((page - 1) * limit).limit(limit).all()
+    
+    items = []
+    for log, user in results:
+        items.append({
+            "id": log.id,
+            "user_id": log.user_id,
+            "user_email": user.email,
+            "action": log.action,
+            "resource_type": log.resource_type,
+            "entity_type": log.resource_type,
+            "resource_id": log.resource_id,
+            "entity_name": log.description or f"{log.resource_type} #{log.resource_id}",
+            "description": log.description,
+            "source": log.source,
+            "created_at": log.created_at,
+            "timestamp": log.created_at,
+        })
     
     return {"items": items, "total": total}
 
@@ -21,7 +38,6 @@ def get_dashboard_stats(db: Session, user_id: int):
     private_zones = db.query(HostedZone).filter(HostedZone.user_id == user_id, HostedZone.zone_type == "PRIVATE").count()
     
     # Total DNS records (across all owned zones)
-    # Using a join or subquery. Easiest is to sum record_count from HostedZone
     zones = db.query(HostedZone.record_count).filter(HostedZone.user_id == user_id).all()
     total_dns_records = sum(z[0] for z in zones) if zones else 0
     

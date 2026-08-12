@@ -9,6 +9,7 @@ class HostedZoneCreate(BaseModel):
 
 class HostedZoneUpdate(BaseModel):
     description: Optional[str] = None
+    zone_type: Optional[Literal["PUBLIC", "PRIVATE"]] = None
     status: Optional[Literal["ACTIVE", "INACTIVE"]] = None
 
 class HostedZoneResponse(BaseModel):

@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 import uvicorn
+# Triggering hot reload to load new export routes
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import auth, hosted_zones, dns_records, analytics, chat
 

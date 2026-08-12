@@ -67,6 +67,8 @@ def update_hosted_zone(db: Session, user_id: int, zone_id: int, zone_data: Hoste
 
     if zone_data.description is not None:
         zone.description = zone_data.description
+    if zone_data.zone_type is not None:
+        zone.zone_type = zone_data.zone_type
     if zone_data.status is not None:
         zone.status = zone_data.status
 

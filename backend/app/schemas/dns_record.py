@@ -26,3 +26,9 @@ class DNSRecordResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class PaginatedDNSRecords(BaseModel):
+    items: list[DNSRecordResponse]
+    total: int
+    page: int
+    limit: int

@@ -1,33 +1,54 @@
-# Node
+# Dependencies
 node_modules/
-.next/
-out/
-build/
-.env*.local
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
+frontend/node_modules/
+backend/venv/
 venv/
-.env
+.venv/
+ENV/
 
-# Database
+# Python Cache & Build
+__pycache__/
+backend/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+backend/.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Next.js & Frontend Build
+.next/
+frontend/.next/
+out/
+frontend/out/
+build/
+dist/
+.vercel
+
+# Environment & Secrets
+.env
+.env*.local
+backend/.env
+
+# Database Files
 *.db
+*.sqlite
 *.sqlite3
 route53.db
+backend/route53.db
 
-# OS
+# OS & Editor Files
 .DS_Store
 Thumbs.db
+.vscode/
+.idea/
 
-# Agent Planning Files
-implementation_plan.md
-progress.md
-Hello.md
-*.txt
-
-# Logs
+# Agent & Scratch Files
+scratch_prompt.py
+*.tmp
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

@@ -7,10 +7,27 @@ from app.schemas.dns_record import DNSRecordCreate, DNSRecordUpdate
 from app.services.hosted_zones import get_hosted_zone
 from app.services.audit import log_action
 
-def get_dns_records(db: Session, user_id: int, zone_id: int):
+def get_dns_records(db: Session, user_id: int, zone_id: int, search: str = None, page: int = 1, limit: int = 50):
     # Ensure user owns the zone
     get_hosted_zone(db, user_id, zone_id)
-    return db.query(DNSRecord).filter(DNSRecord.hosted_zone_id == zone_id).order_by(DNSRecord.created_at.desc()).all()
+    
+    query = db.query(DNSRecord).filter(DNSRecord.hosted_zone_id == zone_id)
+    
+    if search:
+        query = query.filter(
+            (DNSRecord.name.ilike(f"%{search}%")) | 
+            (DNSRecord.value.ilike(f"%{search}%"))
+        )
+        
+    total = query.count()
+    items = query.order_by(DNSRecord.created_at.desc()).offset((page - 1) * limit).limit(limit).all()
+    
+    return {
+        "items": items,
+        "total": total,
+        "page": page,
+        "limit": limit
+    }
 
 def get_dns_record(db: Session, user_id: int, zone_id: int, record_id: int):
     get_hosted_zone(db, user_id, zone_id)
