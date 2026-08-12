@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { LogOut, Plus, Trash2, Globe, Server, Activity, ArrowRight, ClipboardList } from "lucide-react";
+import { LogOut, Plus, Trash2, Globe, Server, Activity, ArrowRight, ClipboardList, Sparkles } from "lucide-react";
 
 interface DashboardStats {
   total_hosted_zones: number;
@@ -99,6 +99,10 @@ export default function DashboardPage() {
             <h1 className="font-semibold text-lg text-white">Route53 Console</h1>
           </div>
           <div className="flex items-center gap-4">
+            <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard/chat")} className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 hidden md:flex">
+              <Sparkles className="h-4 w-4 mr-2" />
+              Ask AI
+            </Button>
             <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard/logs")} className="text-zinc-400 hover:text-white hover:bg-zinc-900 hidden md:flex">
               <ClipboardList className="h-4 w-4 mr-2" />
               Audit Logs
