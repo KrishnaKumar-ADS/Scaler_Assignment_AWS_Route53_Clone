@@ -27,24 +27,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const initAuth = async () => {
       const token = localStorage.getItem("session_token");
+      const isPublicRoute = pathname === "/login" || pathname === "/signup" || pathname === "/";
+
       if (token) {
         try {
           const res = await api.get("/auth/me");
           setUser(res.data);
           
-          // If we are on the login page and authenticated, redirect to dashboard
-          if (pathname === "/login" || pathname === "/") {
+          // If authenticated and on a public auth page, redirect to dashboard
+          if (isPublicRoute) {
             router.push("/dashboard");
           }
         } catch (error) {
           console.error("Failed to fetch user", error);
           localStorage.removeItem("session_token");
-          if (pathname !== "/login") {
+          if (!isPublicRoute) {
             router.push("/login");
           }
         }
       } else {
-        if (pathname !== "/login") {
+        if (!isPublicRoute) {
           router.push("/login");
         }
       }

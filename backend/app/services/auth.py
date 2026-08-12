@@ -6,7 +6,8 @@ import uuid
 
 from app.models.user import User
 from app.models.session import Session as DBSession
-from app.schemas.auth import LoginRequest, AuthResponse
+from app.models.audit_log import AuditLog
+from app.schemas.auth import LoginRequest, RegisterRequest, AuthResponse
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -33,6 +34,50 @@ def login_user(db: Session, credentials: LoginRequest) -> AuthResponse:
     db.add(new_session)
     db.commit()
     db.refresh(new_session)
+
+    return AuthResponse(
+        session_token=token,
+        user=user
+    )
+
+def register_user(db: Session, credentials: RegisterRequest) -> AuthResponse:
+    existing = db.query(User).filter(User.email == credentials.email).first()
+    if existing:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="An account with this email already exists"
+        )
+
+    hashed_pw = pwd_context.hash(credentials.password)
+    user = User(
+        email=credentials.email,
+        password_hash=hashed_pw
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    # Log registration event
+    db.add(AuditLog(
+        user_id=user.id,
+        action="SIGN_UP",
+        resource_type="USER",
+        resource_id=user.id,
+        description=f"User signed up with {user.email}",
+        source="UI"
+    ))
+    db.commit()
+
+    # Log user in directly
+    token = str(uuid.uuid4())
+    expires = datetime.utcnow() + timedelta(hours=24)
+    new_session = DBSession(
+        user_id=user.id,
+        session_token=token,
+        expires_at=expires
+    )
+    db.add(new_session)
+    db.commit()
 
     return AuthResponse(
         session_token=token,
