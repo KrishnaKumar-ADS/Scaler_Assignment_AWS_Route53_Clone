@@ -43,7 +43,14 @@ export default function AIChatPage() {
       setMessages(prev => [...prev, { role: "assistant", content: res.data.response }]);
     } catch (error: any) {
       console.error("Chat error:", error);
-      const errorMessage = error.response?.data?.detail || "Sorry, I encountered an error connecting to the intelligence server.";
+      let errorMessage = "Sorry, I encountered an error connecting to the intelligence server.";
+      if (error.response?.data?.detail) {
+        errorMessage = typeof error.response.data.detail === "string" 
+          ? error.response.data.detail 
+          : JSON.stringify(error.response.data.detail);
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
       setMessages(prev => [...prev, { role: "assistant", content: `Error: ${errorMessage}` }]);
     } finally {
       setIsLoading(false);
@@ -126,19 +133,20 @@ export default function AIChatPage() {
 
         {/* Input Form */}
         <div className="mt-4 pt-4 border-t border-zinc-800">
-          <form onSubmit={handleSendMessage} className="relative flex items-center">
+          <form onSubmit={handleSendMessage} className="relative flex items-center max-w-3xl mx-auto w-full">
+            <div className="absolute left-4 opacity-50"><Sparkles className="h-5 w-5" /></div>
             <Input 
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about your DNS records, or type a greeting..."
-              className="w-full bg-zinc-900/80 border-zinc-800 text-white h-14 pl-5 pr-14 rounded-full focus-visible:ring-blue-500 shadow-inner"
+              placeholder="Ask about your DNS records..."
+              className="w-full bg-zinc-900 border-zinc-700/50 text-white h-14 pl-12 pr-14 rounded-full focus-visible:ring-blue-500/50 focus-visible:border-blue-500 shadow-xl transition-all hover:bg-zinc-800/80"
               disabled={isLoading}
             />
             <Button 
               type="submit" 
               size="icon" 
               disabled={!input.trim() || isLoading}
-              className="absolute right-2 h-10 w-10 rounded-full bg-blue-600 hover:bg-blue-500 text-white"
+              className="absolute right-2 h-10 w-10 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
             >
               <Send className="h-4 w-4 ml-0.5" />
             </Button>
