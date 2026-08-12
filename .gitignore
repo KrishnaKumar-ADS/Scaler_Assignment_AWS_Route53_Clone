@@ -21,6 +21,12 @@ route53.db
 .DS_Store
 Thumbs.db
 
+# Agent Planning Files
+implementation_plan.md
+progress.md
+Hello.md
+*.txt
+
 # Logs
 npm-debug.log*
 yarn-debug.log*
