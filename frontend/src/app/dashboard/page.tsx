@@ -249,7 +249,7 @@ export default function DashboardPage() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white hover:bg-zinc-800">
+                          <Button variant="ghost" size="sm" onClick={() => router.push(`/dashboard/zones/${zone.id}`)} className="text-zinc-400 hover:text-white hover:bg-zinc-800">
                             Manage <ArrowRight className="ml-1 w-4 h-4" />
                           </Button>
                           <Button variant="ghost" size="sm" onClick={() => handleDeleteZone(zone.id)} className="text-red-400 hover:text-red-300 hover:bg-red-500/10">
