@@ -6,7 +6,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 
 API_URL = "http://127.0.0.1:8000"
 
-print("--- Testing Phase 3: Auth ---")
+print("--- Testing Auth ---")
 response = requests.post(f"{API_URL}/api/auth/login", json={"email": "demo@example.com", "password": "demo1234"})
 if response.status_code == 200:
     print("[OK] Login successful")
@@ -15,13 +15,13 @@ else:
     print("[ERROR] Login failed:", response.text)
     exit(1)
 
-print("\n--- Testing Phase 4: Hosted Zones ---")
+print("\n--- Testing Hosted Zones ---")
 response = requests.get(f"{API_URL}/api/hosted-zones", headers={"Authorization": f"Bearer {token}"})
 if response.status_code == 200:
     zones = response.json().get("items", [])
     print(f"[OK] Get Hosted Zones successful, retrieved {len(zones)} zones")
     
-    print("\n--- Testing Phase 5: DNS Records ---")
+    print("\n--- Testing DNS Records ---")
     if zones:
         first_zone_id = zones[0]['id']
         response = requests.get(f"{API_URL}/api/hosted-zones/{first_zone_id}/records", headers={"Authorization": f"Bearer {token}"})
@@ -35,7 +35,7 @@ if response.status_code == 200:
 else:
     print("[ERROR] Get Hosted Zones failed:", response.text)
 
-print("\n--- Testing Phase 6: Analytics ---")
+print("\n--- Testing Analytics ---")
 response = requests.get(f"{API_URL}/api/analytics/dashboard-stats", headers={"Authorization": f"Bearer {token}"})
 if response.status_code == 200:
     stats = response.json()

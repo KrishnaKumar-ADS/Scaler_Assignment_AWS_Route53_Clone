@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth, hosted_zones, dns_records, analytics
+from app.routers import auth, hosted_zones, dns_records, analytics, chat
 
 app = FastAPI(title="Route53 Clone API")
 
@@ -17,6 +17,7 @@ app.include_router(auth.router)
 app.include_router(hosted_zones.router)
 app.include_router(dns_records.router)
 app.include_router(analytics.router)
+app.include_router(chat.router)
 
 @app.get("/")
 def read_root():
