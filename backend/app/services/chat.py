@@ -68,7 +68,7 @@ def chat_with_ai(db: Session, user_id: int, user_messages: list) -> str:
         model="openrouter/free",
         messages=messages,
         extra_headers={
-            "HTTP-Referer": "https://localhost:3000",
+            "HTTP-Referer": os.getenv("FRONTEND_URL", "https://scaler-assignment-aws-route53-clone.vercel.app"),
             "X-Title": "Route53 Clone",
         }
     )

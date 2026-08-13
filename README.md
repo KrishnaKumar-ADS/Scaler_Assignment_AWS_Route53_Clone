@@ -7,8 +7,9 @@ A production-grade, highly responsive AWS Route53 management console built with 
 ## 🔗 Running Local Instances & Links
 
 When running locally, access the services at:
-- **Frontend Web Application**: [http://localhost:3000](http://localhost:3000)
-- **Backend API Base**: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- **Deployed Production Frontend**: [https://scaler-assignment-aws-route53-clone.vercel.app](https://scaler-assignment-aws-route53-clone.vercel.app)
+- **Local Frontend Web Application**: [http://localhost:3000](http://localhost:3000)
+- **Local Backend API Base**: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 - **Interactive OpenAPI (Swagger) Documentation**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
 ---
